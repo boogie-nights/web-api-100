@@ -1,11 +1,12 @@
 ﻿using Marten;
 using Microsoft.AspNetCore.Mvc;
+using Shows.Api.Shows.Entities;
+using Shows.Api.Shows.Models;
 
 namespace Shows.Api.Shows;
 
 public class ShowsController(IDocumentSession session) : ControllerBase
 {
-
 
     [HttpGet("api/shows")]
     public async Task<ActionResult> GetAllShowsAsync()
@@ -13,14 +14,6 @@ public class ShowsController(IDocumentSession session) : ControllerBase
         var shows = await session.Query<ShowDetailsEntity>()
             .OrderBy(show => show.CreatedAt)
             .ToListAsync();
-
-        //var response = new CollectionResponseModel<ShowSummaryModel>();
-
-        //response.Data = shows.Select(show => new ShowSummaryModel
-        //{
-        //    Id = show.Id,
-        //    Name = show.Name,
-        //}).ToList();
 
         return Ok(shows);
     }
@@ -56,7 +49,6 @@ public class ShowsController(IDocumentSession session) : ControllerBase
         [FromBody] ShowCreateModel showCreateModel
         )
     {
-
         // Create the entity to store in the DB from incoming data
         var showCreateEntity = new ShowDetailsEntity
         {
@@ -83,43 +75,4 @@ public class ShowsController(IDocumentSession session) : ControllerBase
 
         return StatusCode(201, response);
     }
-}
-
-public class CollectionResponseModel<T>
-{
-    public IList<T> Data { get; set; } = new List<T>();
-}
-
-public record ShowSummaryModel
-{
-    public Guid Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-}
-
-// Data returned to user, built from show details entity
-public record ShowDetailsModel
-{
-    public Guid Id { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public string StreamingService { get; set; } = string.Empty;
-}
-
-// Data Received for Post
-public record ShowCreateModel
-{
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public string StreamingService { get; set; } = string.Empty;
-}
-
-// Data stored in the DB
-public record ShowDetailsEntity
-{
-    public Guid Id { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public string StreamingService { get; set; } = string.Empty;
 }
