@@ -1,5 +1,5 @@
 using Alba;
-using Shows.Api.Shows;
+using Shows.Api.Shows.Models;
 using Shows.Tests.Api.Fixtures;
 
 namespace Shows.Tests.Api.Shows;
