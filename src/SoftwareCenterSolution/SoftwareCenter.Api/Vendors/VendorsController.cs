@@ -1,50 +1,74 @@
-﻿namespace SoftwareCenter.Api.Vendors;
+﻿using System.ComponentModel.DataAnnotations;
+using Marten;
+using SoftwareCenter.Api.Vendors.Models;
+
+namespace SoftwareCenter.Api.Vendors;
 
 // When we get a GET request to "/vendors", we want this controller to be created, and
 // a specific method on this controller to handle providing the response for the request.
-public class VendorsController : ControllerBase
+public class VendorsController(IDocumentSession session) : ControllerBase
 {
+
+    //private IDocumentSession _documentSession;
+
+    //public VendorsController(IDocumentSession documentSession)
+    //{
+    //    _documentSession = documentSession;
+    //}
+
     [HttpGet("/vendors")]
     public async Task<ActionResult> GetAllVendorsAsync()
     {
         return Ok();
     }
 
+    [HttpPost("/vendors")]
     public async Task<ActionResult> AddVendorAsync(
         [FromBody] VendorCreateModel model
     ) 
     {
-        var response = new VendorDetailsModel()
+        // TODO: validate the inputs, check auth all that stuff
+
+        // store the data somewhere
+        var entity = new VendorEntity()
         {
-            Id = Guid.NewGuid(),
+            Id = new Guid(),
             Name = model.Name,
             PointOfContact = model.PointOfContact
         };
-        return StatusCode(201, model);
+        session.Store(entity);
+        await session.SaveChangesAsync();
+
+        var response = new VendorDetailsModel()
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            PointOfContact = entity.PointOfContact
+        };
+
+        return StatusCode(201, response);
     }
-}
 
-public record VendorPointOfContact
-{
-    public string Name { get; set; } = string.Empty;
+    [HttpGet("/vendors/{id:Guid}")]
+    public async Task<ActionResult> GetVendorByIdAsync(Guid id)
+    {
+        var savedVendor = await session.Query<VendorEntity>()
+            .Where(v => v.Id == id)
+            .SingleOrDefaultAsync();
 
-    public string EMail { get; set; } = string.Empty;
-
-    public string Phone { get; set; } = string.Empty;
-}
-
-public record VendorCreateModel
-{
-    public string Name { get; set; } = string.Empty;
-
-    public VendorPointOfContact PointOfContact { get; set; } = new();
-}
-
-public record VendorDetailsModel
-{
-    public Guid Id {  get; set; }
-
-    public string Name { get; set; } = string.Empty;
-
-    public VendorPointOfContact PointOfContact { get; set; } = new();
+        if (savedVendor == null)
+        {
+            return NotFound();
+        } 
+        else
+        {
+            var response = new VendorDetailsModel()
+            {
+                Id = savedVendor.Id,
+                Name = savedVendor.Name,
+                PointOfContact = savedVendor.PointOfContact
+            };
+            return Ok(response);
+        }
+    }
 }

@@ -24,20 +24,53 @@ Resource: `/vendors` - (collection resource)
 GET http://localhost:1337/vendors
 Accept: application/json
 ```
+// dont' send arrays, always send "documents"
 
+```http
+200 Ok
+Content-Type:application-json
+
+{
+
+"data": [
+  { id: 33, name: 'Microsoft'}
+],
+
+}
+
+```
 ```http
 POST http://localhost:1337/vendors
 Content-Type: application/json
 
 {
-  "name": "Apple",
+  "name": "Microsoft",
   "pointOfContact": {
-    "name": "Tim Apple",
-    "email": "tim@apple.com",
-    "phone": "888 999-9999"
+    "name": "Bob Jones",
+    "companyName": "Geico",
+    "phone": "some-phone",
+    "email": "some@email.com"
+
   }
 }
 ```
+
+```http
+GET http://localhost:1337/vendors/tacos
+
+```
+
+PUT  http://localhost:1337/vendors/8bb13b4a-a6e3-4e24-bf0f-0d74c60ea149/point-of-contact
+
+{
+  "name": "brenda",
+  "email": blah,
+  "phone": 939399
+}
+
+DELETE http://localhost:1337/vendors/8bb13b4a-a6e3-4e24-bf0f-0d74c60ea149/
+
+
 
 Resources have a name, the name is technically a URI in the form of:
 

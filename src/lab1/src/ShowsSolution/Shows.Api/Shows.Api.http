@@ -1,0 +1,6 @@
+@Shows.Api_HostAddress = http://localhost:1338
+
+GET {{Shows.Api_HostAddress}}/shows/
+Accept: application/json
+
+###

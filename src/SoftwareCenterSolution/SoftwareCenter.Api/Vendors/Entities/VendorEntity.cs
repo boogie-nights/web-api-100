@@ -1,0 +1,13 @@
+﻿using SoftwareCenter.Api.Vendors.Models;
+
+namespace SoftwareCenter.Api.Vendors.Entities;
+
+// What we're storing in the database
+public class VendorEntity
+{
+    public Guid Id { get; set; }
+
+    public string Name { get; set; } = string.Empty;
+
+    public VendorPointOfContact PointOfContact { get; set; } = new();
+}
