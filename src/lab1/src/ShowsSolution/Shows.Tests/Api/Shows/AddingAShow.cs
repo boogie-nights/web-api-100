@@ -175,5 +175,8 @@ public class AddingAShow(SystemTestFixture fixture)
         Assert.Equal(secondPostEntityReturned.Name, secondGetEntityReturned.Name);
         Assert.Equal(secondPostEntityReturned.Description, secondGetEntityReturned.Description);
         Assert.Equal(secondPostEntityReturned.StreamingService, secondGetEntityReturned.StreamingService);
+
+        // Actually Get the shows now
+        
     }
 }
