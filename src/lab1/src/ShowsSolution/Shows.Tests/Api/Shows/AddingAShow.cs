@@ -35,6 +35,7 @@ public class AddingAShow(SystemTestFixture fixture)
         Assert.NotNull(postEntityReturned);
 
         Assert.True(postEntityReturned.Id != Guid.Empty);
+        // Unsurprisingly the date testing here is incorrect
         Assert.True(postEntityReturned.CreatedAt != DateTime.MinValue);
 
         Assert.Equal(postEntityReturned.Name, showToAdd.Name);
@@ -67,6 +68,7 @@ public class AddingAShow(SystemTestFixture fixture)
         Assert.NotNull(postEntityReturned);
 
         Assert.True(postEntityReturned.Id != Guid.Empty);
+        // Unsurprisingly the date testing here is incorrect
         Assert.True(postEntityReturned.CreatedAt != DateTime.MinValue);
 
         Assert.Equal(postEntityReturned.Name, showToAdd.Name);
@@ -122,6 +124,7 @@ public class AddingAShow(SystemTestFixture fixture)
         Assert.NotNull(postEntityReturned);
 
         Assert.True(postEntityReturned.Id != Guid.Empty);
+        // Unsurprisingly the date testing here is incorrect
         Assert.True(postEntityReturned.CreatedAt != DateTime.MinValue);
 
         Assert.Equal(postEntityReturned.Name, showToAdd.Name);
@@ -155,6 +158,7 @@ public class AddingAShow(SystemTestFixture fixture)
         Assert.NotNull(secondPostEntityReturned);
 
         Assert.True(secondPostEntityReturned.Id != Guid.Empty);
+        // Unsurprisingly the date testing here is incorrect
         Assert.True(secondPostEntityReturned.CreatedAt != DateTime.MinValue);
 
         Assert.Equal(secondPostEntityReturned.Name, secondShowToAdd.Name);
@@ -177,6 +181,15 @@ public class AddingAShow(SystemTestFixture fixture)
         Assert.Equal(secondPostEntityReturned.StreamingService, secondGetEntityReturned.StreamingService);
 
         // Actually Get the shows now
-        
+
+        var getShowsResponse = await host.Scenario(_ => 
+        {
+            _.Get.Url($"/api/shows/");
+            _.StatusCodeShouldBeOk();
+        });
+
+        var firstShow = getShowsResponse.ReadAsJson<List<ShowDetailsModel>>().First();
+
+        Assert.Equal(firstShow, secondGetEntityReturned);
     }
 }

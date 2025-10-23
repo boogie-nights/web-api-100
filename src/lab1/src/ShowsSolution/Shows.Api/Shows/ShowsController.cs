@@ -12,7 +12,7 @@ public class ShowsController(IDocumentSession session) : ControllerBase
     public async Task<ActionResult> GetAllShowsAsync()
     {
         var shows = await session.Query<ShowDetailsEntity>()
-            .OrderBy(show => show.CreatedAt)
+            .OrderByDescending(show => show.CreatedAt)
             .ToListAsync();
 
         return Ok(shows);
