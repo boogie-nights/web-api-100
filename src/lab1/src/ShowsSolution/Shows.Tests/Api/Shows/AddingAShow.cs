@@ -6,6 +6,8 @@ namespace Shows.Tests.Api.Shows;
 
 [Collection("SystemTestFixture")]
 [Trait("Category", "SystemTest")]
+
+// General need to update, fix the date created tests. Will want to create "FakeTime" provider to better control the data
 public class AddingAShow(SystemTestFixture fixture)
 {
     private readonly IAlbaHost _host = fixture.Host;
@@ -181,7 +183,6 @@ public class AddingAShow(SystemTestFixture fixture)
         Assert.Equal(secondPostEntityReturned.StreamingService, secondGetEntityReturned.StreamingService);
 
         // Actually Get the shows now
-
         var getShowsResponse = await host.Scenario(_ => 
         {
             _.Get.Url($"/api/shows/");
